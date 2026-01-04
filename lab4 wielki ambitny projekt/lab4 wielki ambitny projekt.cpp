@@ -9,6 +9,8 @@ using namespace std;
 int DataCounter; // zlicza ile jest zapisanych wartości (każda konwersja to +2 do tej liczby
 double memory[100] = { 0 }; // tablica przechowująca wartości liczbowe tempteratur
 char memoryUnit[100] = { ' ' }; //tablica przechowująca symbole temperatur
+bool conversionFailed = false; //zmienna globalna dla convertToInteger
+
 
 // Bezpieczne wczytywanie int - zwraca false jeśli wpis nie był liczbą
 bool readInt(int &out) {
@@ -318,7 +320,7 @@ int main() {
                         waitForEnter();
                         break;
                     }
-                    cout << "Enter the unit for the new temperature you'll be converting from (C/F/K): ";
+                    cout << "Enter the unit you'll be converting from (C/F/K): ";
                     char newUnit;
                     cin >> newUnit;
                     newUnit = static_cast<char>(std::toupper(static_cast<unsigned char>(newUnit)));
@@ -634,3 +636,80 @@ void waitForEnter() {
     cin.get();
 }
 
+
+/* Z pliku laboratoryjnego o convertToInteger:
+funkcja dostaje tablice znakow i jej rozmiar.
+Wynik: zwraca liczbe calkowita typu int na bazie znakow
+w tablicy vector[]. Jesli w tablicy sa znaki inne niz
+cyfry, to ustawia zmienna globalna conversionFailed na true.
+ */
+int convertToInteger(const char vector[], int size) {
+    int result = 0;
+    bool isNegative = false;
+
+    for (int i = 0; i < size; ++i) {
+        if (vector[i] == '\0') 
+            break; // Stop processing at the null-terminator
+
+        if (isdigit(vector[i])) { // sprawdz czy znak to cyfra
+            result = result * 10 + (vector[i] - '0'); //dla cyfr, konwertuj
+        }
+        else if (vector[i] == '-' && i == 0) {
+            isNegative = true; // sprawdz czy liczba zaczyna sie od minusa
+        }
+        else if (vector[i] == '+' && i == 0) {
+            continue; //a jak od plusa to ignoruj
+        }
+        else {
+            if (conversionFailed == false) {
+                cout << "Error. Incorrect input for integer type" << endl;
+                conversionFailed = true;
+            }
+        }
+    }
+    return isNegative ? -result : result;
+}
+
+
+
+double convertToDouble(const char vector[], int size) { //code 06_07
+    double result = 0.0;
+    double fractionalMultiplier = 0.1;
+    bool isNegative = false;
+    bool isFractional = false;
+    bool signRecognised = false;
+
+    for (int i = 0; i < size; ++i) {
+        if (vector[i] == '\0')
+            break; // Stop processing at the null-terminator
+
+        if (isdigit(vector[i])) {
+            if (isFractional) {
+                result += (vector[i] - '0') * fractionalMultiplier;
+                fractionalMultiplier *= 0.1;
+            }
+            else {
+                result = result * 10.0 + (vector[i] - '0');
+            }
+        }
+        else if (vector[i] == '.' && isFractional == false) {
+            isFractional = true; // Start processing fractional part
+        }
+        else if (vector[i] == '-' && signRecognised == false) {
+            signRecognised = true;
+            isNegative = true;
+        }
+        else if (vector[i] == '+' && signRecognised == false) {
+            signRecognised = true;
+            continue;
+        }
+        else {
+            if (conversionFailed == false) {
+                cout << "Error. Incorrect input for integer type" << endl;
+                conversionFailed = true;
+            }
+        }
+    }
+
+    return isNegative ? -result : result;
+}

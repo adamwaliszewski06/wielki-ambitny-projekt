@@ -125,7 +125,6 @@
   <ItemGroup>
     <ClCompile Include="headerFile.h" />
     <ClCompile Include="lab4 wielki ambitny projekt.cpp" />
-    <ClCompile Include="Źródło.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
