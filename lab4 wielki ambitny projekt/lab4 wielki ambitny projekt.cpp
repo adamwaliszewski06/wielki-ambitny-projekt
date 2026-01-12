@@ -3,13 +3,14 @@
 #include <cctype>
 #include <cstdlib> // biblioteki potrzebne do uzycia rand i srand 
 #include <ctime> 
-#include "headerFile.h";
+#include "headerFile.h"
 using namespace std;
 
 int DataCounter; // zlicza ile jest zapisanych wartości (każda konwersja to +2 do tej liczby
 double memory[100] = { 0 }; // tablica przechowująca wartości liczbowe tempteratur
 char memoryUnit[100] = { ' ' }; //tablica przechowująca symbole temperatur
-bool conversionFailed = false; //zmienna globalna dla convertToInteger
+bool conversionFailed = false;
+
 
 
 int main() {
@@ -34,18 +35,21 @@ int main() {
                 cout << "Further conversions will not be saved in history.";
             }
         }
+
+        menu();
         
-            menu();
-            char choice[100];
-            cin.getline(choice, 100);
-            int choice = convertToInteger(choice, sizeof(choice));
+        if (!readInt(choice)) {
+            cout << "Invalid input." << endl;
+            waitForEnter();
+            conversionFailed = false;
+            continue;
+        }
 
-
-            if (conversionFailed) { // zabezpieczenie przy wpisaniu nie-liczby lub nie-integera
-                cout << "Invalid input." << endl;
-                waitForEnter();
-            }
-            else {
+        if (conversionFailed) { // zabezpieczenie przy wpisaniu nie-liczby lub nie-integera
+            cout << "Invalid input." << endl;
+            waitForEnter();
+        }
+        else {
             switch (choice)
             {
             case -1:
@@ -279,13 +283,13 @@ int main() {
                         else {
                             removeFromHistory(entityToRemove);
                         }
-						cout << "Would you like to remove another element? (1 - Yes, 0 - No)" << endl;
-						int yn;
+                        cout << "Would you like to remove another element? (1 - Yes, 0 - No)" << endl;
+                        int yn;
                         cin >> yn;
                         if (yn != 1) {
-							break; // wychodzi z pętli while(1) i wraca do głównego menu
+                            break; // wychodzi z pętli while(1) i wraca do głównego menu
                         }
-                        
+
                     }
                 }
             }
@@ -638,8 +642,11 @@ int main() {
                                 memoryUnit[idx] = newUnit;
 
                                 cout << "Pick which unit to convert this temperature to" << endl <<
+
                                     "1 - Celsius" << endl <<
+
                                     "2 - Fahrenheit" << endl <<
+
                                     "3 - Kelvin" << endl;
                                 int pick;
                                 if (!readInt(pick)) {
@@ -698,6 +705,15 @@ int main() {
                         }
                         break;
                         case 10: // losowe wypełnienie historii
+                            ///////////////////////
+                            ///////////////////////
+                            ///////////////////////
+                            ///////////////////////
+                            ///////////////////////
+                            /////////////////////
+                            ///////////////////////
+
+
                         {
                             cout << "How many random entries would you like to generate?" << endl;
                             int howMany;
@@ -724,7 +740,7 @@ int main() {
 
                             for (int i = 0; i < howMany; ++i) {
                                 int unitSelect = rand() % 3; // losuje 0, 1 lub 2
-                                double fromTemp;
+
                                 if (unitSelect == 0) {
                                     int tempInt = rand() % 1001 - 273; // int in [-273, 727]
                                     double fromTemp = (double)tempInt;
@@ -780,30 +796,38 @@ int main() {
                                     memoryUnit[DataCounter] = 'K';
                                     DataCounter++;
 
-                        if (toUnitSelect == 0) { // K to C
-                            memory[DataCounter] = KtoC(fromTemp);
-                            memoryUnit[DataCounter] = 'C';
-                            DataCounter++;
+                                    if (toUnitSelect == 0) { // K to C
+                                        memory[DataCounter] = KtoC(fromTemp);
+                                        memoryUnit[DataCounter] = 'C';
+                                        DataCounter++;
+                                    }
+                                    else { // K to F
+                                        memory[DataCounter] = KtoF(fromTemp);
+                                        memoryUnit[DataCounter] = 'F';
+                                        DataCounter++;
+                                    }
+                                }
+                            }
+                            break;
                         }
-                        else { // K to F
-                            memory[DataCounter] = KtoF(fromTemp);
-                            memoryUnit[DataCounter] = 'F';
-                            DataCounter++;
+                        
+                        default:
+                            cout << "Exiting program";
+                            waitForEnter();
+                            return 0;
+
                         }
+
+
+                        }
+                        return 0;
                     }
                 }
-                break;
-            default:
-                cout << "Exiting program";
-                waitForEnter();
-                return 0;
             }
             }
-         
-
+        }
     }
-    return 0;
-}
+
     
 
        
@@ -936,7 +960,7 @@ int convertToInteger(const char vector[], int size) {
     bool isNegative = false;
 
     for (int i = 0; i < size; ++i) {
-        if (vector[i] == '\0') 
+        if (vector[i] == '\0')
             break; // Stop processing at the null-terminator
 
         if (isdigit(vector[i])) { // sprawdz czy znak to cyfra
@@ -955,7 +979,7 @@ int convertToInteger(const char vector[], int size) {
             }
         }
     }
-    return isNegative ? -result : result;
+    return (isNegative ? -result : result);
 }
 
 
@@ -1000,4 +1024,18 @@ double convertToDouble(const char vector[], int size) { //code 06_07
     }
 
     return isNegative ? -result : result;
+}
+
+bool readInt(int &out) {
+    // Try to read an integer from stdin. On failure, clear the error state
+    // and discard the rest of the line. Return true on success, false on failure.
+    if (!(cin >> out)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    // Consume the remainder of the line so subsequent getline/get calls behave correctly.
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return true;
 }
