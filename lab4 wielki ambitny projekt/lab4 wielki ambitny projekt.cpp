@@ -10,7 +10,8 @@ using namespace std;
 int DataCounter; // zlicza ile jest zapisanych wartości (każda konwersja to +2 do tej liczby
 double memory[100] = { 0 }; // tablica przechowująca wartości liczbowe tempteratur
 char memoryUnit[100] = { ' ' }; //tablica przechowująca symbole temperatur
-bool conversionFailed = false; //zmienna globalna dla convertToInteger
+bool conversionFailed = false;
+
 
 
 int main() {
@@ -661,8 +662,11 @@ int main() {
                                 memoryUnit[idx] = newUnit;
 
                                 cout << "Pick which unit to convert this temperature to" << endl <<
+
                                     "1 - Celsius" << endl <<
+
                                     "2 - Fahrenheit" << endl <<
+
                                     "3 - Kelvin" << endl;
                                 int pick;
                                 if (!readInt(pick)) {
@@ -721,6 +725,15 @@ int main() {
                         }
                         break;
                         case 10: // losowe wypełnienie historii
+                            ///////////////////////
+                            ///////////////////////
+                            ///////////////////////
+                            ///////////////////////
+                            ///////////////////////
+                            /////////////////////
+                            ///////////////////////
+
+
                         {
                             cout << "How many random entries would you like to generate?" << endl;
                             int howMany;
@@ -747,7 +760,7 @@ int main() {
 
                             for (int i = 0; i < howMany; ++i) {
                                 int unitSelect = rand() % 3; // losuje 0, 1 lub 2
-                                double fromTemp;
+
                                 if (unitSelect == 0) {
                                     int tempInt = rand() % 1001 - 273; // int in [-273, 727]
                                     double fromTemp = (double)tempInt;
@@ -834,6 +847,7 @@ int main() {
     
 
        
+
 
 
 double FtoC(double degrees){
@@ -982,7 +996,7 @@ int convertToInteger(const char vector[], int size) {
             }
         }
     }
-    return isNegative ? -result : result;
+    return (isNegative ? -result : result);
 }
 
 
@@ -1027,4 +1041,18 @@ double convertToDouble(const char vector[], int size) { //code 06_07
     }
 
     return isNegative ? -result : result;
+}
+
+bool readInt(int &out) {
+    // Try to read an integer from stdin. On failure, clear the error state
+    // and discard the rest of the line. Return true on success, false on failure.
+    if (!(cin >> out)) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return false;
+    }
+
+    // Consume the remainder of the line so subsequent getline/get calls behave correctly.
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    return true;
 }
