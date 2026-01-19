@@ -17,7 +17,6 @@ bool conversionFailed = false;
 int main() {
     srand(static_cast<unsigned>(time(nullptr)));
     double degrees;
-    int yesno;
     int choice, choice2;
     DataCounter = 0;
 
@@ -28,7 +27,9 @@ int main() {
             cout << "Memory full. Clear history?" << endl;
             cout << "1 - Yes" << endl;
             cout << "0 - No" << endl;
-            cin >> yesno;
+            char yesnoBuf[100];
+            cin.getline(yesnoBuf, 100);
+            int yesno = convertToInteger(yesnoBuf, sizeof(yesnoBuf));
             if (yesno == 0) {
                 cout << "Further conversions will not be saved in history.";
             }
@@ -44,7 +45,7 @@ int main() {
         int choice = convertToInteger(choiceBuf, sizeof(choiceBuf));
 
 
-        if (conversionFailed) { // zabezpieczenie przy wpisaniu nie-liczby lub nie-integera
+        if (conversionFailed) { //conversionFailed=wpisano nie-liczb
             if (choice == -1) {
                 cout << "Exiting program";
                 waitForEnter();
@@ -135,8 +136,8 @@ int main() {
                     waitForEnter();
                 }
                 else {
+                    cout << "Temperature in Kelvin: " << CtoK(degrees) << endl;
                     if (DataCounter <= 98) {
-                        cout << "Temperature in Kelvin: " << CtoK(degrees) << endl;
                         memory[DataCounter] = degrees;
                         memoryUnit[DataCounter] = 'C';
                         DataCounter++;
@@ -157,8 +158,8 @@ int main() {
                     waitForEnter();
                 }
                 else {
+                    cout << "Temperature in Celsius: " << KtoC(degrees) << endl;
                     if (DataCounter <= 98) {
-                        cout << "Temperature in Celsius: " << KtoC(degrees) << endl;
                         memory[DataCounter] = degrees;
                         memoryUnit[DataCounter] = 'K';
                         DataCounter++;
@@ -179,8 +180,8 @@ int main() {
                     waitForEnter();
                 }
                 else {
+                    cout << "Temperature in Fahrenheit: " << KtoF(degrees) << endl;
                     if (DataCounter <= 98) {
-                        cout << "Temperature in Fahrenheit: " << KtoF(degrees) << endl;
                         memory[DataCounter] = degrees;
                         memoryUnit[DataCounter] = 'K';
                         DataCounter++;
@@ -203,9 +204,9 @@ int main() {
 
                     /////////////////////////////////////////////////
 
-                    char str2[100];
-                    cin.getline(str2, 100);
-                    int choice2 = convertToInteger(str2, sizeof(str2));
+                    char choice2Buf[100];
+                    cin.getline(choice2Buf, 100);
+                    int choice2 = convertToInteger(choice2Buf, sizeof(choice2Buf));
                     if (conversionFailed) { 
                         cout << "Invalid input." << endl;
                         waitForEnter();
@@ -544,7 +545,7 @@ int main() {
                         }
                     }
                 }
-                waitForEnter();
+                cout << "Generated " << howMany << " random entries";
                 break;
             default:
                 cout << "Exiting program";
