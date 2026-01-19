@@ -3,7 +3,8 @@
 #include <cctype>
 #include <cstdlib> // biblioteki potrzebne do uzycia rand i srand 
 #include <ctime> 
-#include "headerFile.h";
+#include <string>
+#include "headerFile.h"
 using namespace std;
 
 int DataCounter; // zlicza ile jest zapisanych wartości (każda konwersja to +2 do tej liczby
@@ -15,7 +16,7 @@ bool conversionFailed = false; //zmienna globalna dla convertToInteger
 int main() {
     srand(static_cast<unsigned>(time(nullptr)));
     double degrees;
-    bool yesno;
+    int yesno;
     int choice, choice2;
     DataCounter = 0;
 
@@ -27,25 +28,26 @@ int main() {
             cout << "1 - Yes" << endl;
             cout << "0 - No" << endl;
             cin >> yesno;
-            if (yesno == true) {
-                DataCounter = 0;
-            }
-            else {
+            if (yesno == 0) {
                 cout << "Further conversions will not be saved in history.";
             }
-        }
-        
-            menu();
-            char choice[100];
-            cin.getline(choice, 100);
-            int choice = convertToInteger(choice, sizeof(choice));
-
-
-            if (conversionFailed) { // zabezpieczenie przy wpisaniu nie-liczby lub nie-integera
-                cout << "Invalid input." << endl;
-                waitForEnter();
-            }
             else {
+                
+                DataCounter = 0;
+            }
+        }
+
+        menu();
+        char str[100];
+        cin.getline(str, 100);
+        int choice = convertToInteger(str, sizeof(str));
+
+
+        if (conversionFailed) { // zabezpieczenie przy wpisaniu nie-liczby lub nie-integera
+            cout << "Invalid input." << endl;
+            waitForEnter();
+        }
+        else {
             switch (choice)
             {
             case -1:
@@ -192,67 +194,88 @@ int main() {
                 }
                 else {
                     menu2();
-                    if (!readInt(choice2)) {
+
+
+
+
+
+
+                    /////////////////////////////////////////////////
+
+                    char str2[100];
+                    cin.getline(str2, 100);
+                    int choice2 = convertToInteger(str2, sizeof(str2));
+                    if (conversionFailed) { 
                         cout << "Invalid input." << endl;
                         waitForEnter();
+                    }
+
+                    ////////////////////////////////////////////////
+
+
+
+
+
+
+                    else {
+
+                        switch (choice2) {
+                        case 1:
+                        {
+                            bool found = false;
+                            for (int i = 0; i < DataCounter; i += 2) { //patrzy na temperatury wprowadzone
+                                if (memoryUnit[i] == 'F') {
+                                    int EntryNumber = (i / 2) + 1;
+                                    cout << "<" << EntryNumber << "> " << memory[i] << " " << memoryUnit[i] << " -> " << memory[i + 1] << " " << memoryUnit[i + 1] << endl;
+                                    found = true;
+                                }
+                            }
+                            if (!found) {
+                                cout << "No conversion history for F found." << endl;
+                            }
+                        }
                         break;
-                    }
-                    switch (choice2)
-                    {
-                    case 1:
-                    {
-                        bool found = false;
-                        for (int i = 0; i < DataCounter; i += 2) { //patrzy na temperatury wprowadzone
-                            if (memoryUnit[i] == 'F') {
-                                int EntryNumber = (i / 2) + 1;
-                                cout << "<" << EntryNumber << "> " << memory[i] << " " << memoryUnit[i] << " -> " << memory[i + 1] << " " << memoryUnit[i + 1] << endl;
-                                found = true;
+                        case 2:
+                        {
+                            bool found = false;
+                            for (int i = 0; i < DataCounter; i += 2) {
+                                if (memoryUnit[i] == 'C') {
+                                    int EntryNumber = (i / 2) + 1;
+                                    cout << "<" << EntryNumber << "> " << memory[i] << " " << memoryUnit[i] << " -> " << memory[i + 1] << " " << memoryUnit[i + 1] << endl;
+                                    found = true;
+                                }
+                            }
+                            if (!found) {
+                                cout << "No conversion history for C found." << endl;
                             }
                         }
-                        if (!found) {
-                            cout << "No conversion history for F found." << endl;
-                        }
-                    }
-                    break;
-                    case 2:
-                    {
-                        bool found = false;
-                        for (int i = 0; i < DataCounter; i += 2) {
-                            if (memoryUnit[i] == 'C') {
-                                int EntryNumber = (i / 2) + 1;
-                                cout << "<" << EntryNumber << "> " << memory[i] << " " << memoryUnit[i] << " -> " << memory[i + 1] << " " << memoryUnit[i + 1] << endl;
-                                found = true;
+                        break;
+                        case 3:
+                        {
+                            bool found = false;
+                            for (int i = 0; i < DataCounter; i += 2) {
+                                if (memoryUnit[i] == 'K') {
+                                    int EntryNumber = (i / 2) + 1;
+                                    cout << "<" << EntryNumber << "> " << memory[i] << " " << memoryUnit[i] << " -> " << memory[i + 1] << " " << memoryUnit[i + 1] << endl;
+                                    found = true;
+                                }
+                            }
+                            if (!found) {
+                                cout << "No conversion history for K found." << endl;
                             }
                         }
-                        if (!found) {
-                            cout << "No conversion history for C found." << endl;
-                        }
-                    }
-                    break;
-                    case 3:
-                    {
-                        bool found = false;
-                        for (int i = 0; i < DataCounter; i += 2) {
-                            if (memoryUnit[i] == 'K') {
+                        break;
+                        default:
+                            for (int i = 0; i < DataCounter; i += 2) {
                                 int EntryNumber = (i / 2) + 1;
                                 cout << "<" << EntryNumber << "> " << memory[i] << " " << memoryUnit[i] << " -> " << memory[i + 1] << " " << memoryUnit[i + 1] << endl;
-                                found = true;
                             }
                         }
-                        if (!found) {
-                            cout << "No conversion history for K found." << endl;
-                        }
+                        waitForEnter();
                     }
                     break;
-                    default:
-                        for (int i = 0; i < DataCounter; i += 2) {
-                            int EntryNumber = (i / 2) + 1;
-                            cout << "<" << EntryNumber << "> " << memory[i] << " " << memoryUnit[i] << " -> " << memory[i + 1] << " " << memoryUnit[i + 1] << endl;
-                        }
-                    }
-                    waitForEnter();
                 }
-                break;
+            
             case 8:
             {
                 while (1) {
@@ -279,13 +302,13 @@ int main() {
                         else {
                             removeFromHistory(entityToRemove);
                         }
-						cout << "Would you like to remove another element? (1 - Yes, 0 - No)" << endl;
-						int yn;
+                        cout << "Would you like to remove another element? (1 - Yes, 0 - No)" << endl;
+                        int yn;
                         cin >> yn;
                         if (yn != 1) {
-							break; // wychodzi z pętli while(1) i wraca do głównego menu
+                            break; // wychodzi z pętli while(1) i wraca do głównego menu
                         }
-                        
+
                     }
                 }
             }
@@ -780,28 +803,32 @@ int main() {
                                     memoryUnit[DataCounter] = 'K';
                                     DataCounter++;
 
-                        if (toUnitSelect == 0) { // K to C
-                            memory[DataCounter] = KtoC(fromTemp);
-                            memoryUnit[DataCounter] = 'C';
-                            DataCounter++;
+                                    if (toUnitSelect == 0) { // K to C
+                                        memory[DataCounter] = KtoC(fromTemp);
+                                        memoryUnit[DataCounter] = 'C';
+                                        DataCounter++;
+                                    }
+                                    else { // K to F
+                                        memory[DataCounter] = KtoF(fromTemp);
+                                        memoryUnit[DataCounter] = 'F';
+                                        DataCounter++;
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            cout << "Exiting program";
+                            waitForEnter();
+                            return 0;
                         }
-                        else { // K to F
-                            memory[DataCounter] = KtoF(fromTemp);
-                            memoryUnit[DataCounter] = 'F';
-                            DataCounter++;
                         }
                     }
                 }
-                break;
-            default:
-                cout << "Exiting program";
-                waitForEnter();
-                return 0;
             }
             }
-         
-
+        }
     }
+
     return 0;
 }
     
@@ -936,7 +963,7 @@ int convertToInteger(const char vector[], int size) {
     bool isNegative = false;
 
     for (int i = 0; i < size; ++i) {
-        if (vector[i] == '\0') 
+        if (vector[i] == '\0')
             break; // Stop processing at the null-terminator
 
         if (isdigit(vector[i])) { // sprawdz czy znak to cyfra

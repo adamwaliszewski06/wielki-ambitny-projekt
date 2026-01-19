@@ -12,7 +12,7 @@ double getK();
 double check(double temp, char u);
 void waitForEnter();
 void removeFromHistory(int nr);
-bool readInt(int& out);
+
 
 int convertToInteger(const char vector[], int size);
 double convertToDouble(const char vector[], int size);
