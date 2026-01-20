@@ -42,7 +42,7 @@ int main() {
         menu();
         char choiceBuf[100];
         cin.getline(choiceBuf, 100);
-        int choice = convertToInteger(choiceBuf, sizeof(choiceBuf));
+        choice = convertToInteger(choiceBuf, sizeof(choiceBuf));
 
 
         if (conversionFailed) { //conversionFailed=wpisano nie-liczb
@@ -206,7 +206,7 @@ int main() {
 
                     char choice2Buf[100];
                     cin.getline(choice2Buf, 100);
-                    int choice2 = convertToInteger(choice2Buf, sizeof(choice2Buf));
+                    choice2 = convertToInteger(choice2Buf, sizeof(choice2Buf));
                     if (conversionFailed) { 
                         cout << "Invalid input." << endl;
                         waitForEnter();
@@ -480,7 +480,7 @@ int main() {
                     double fromTemp;
                     if (unitSelect == 0) {
                         int tempInt = rand() % 1001 - 273; // int in [-273, 727]
-                        double fromTemp = (double)tempInt;
+                        fromTemp = (double)tempInt;
 
                         memory[DataCounter] = fromTemp;
                         memoryUnit[DataCounter] = 'C';
