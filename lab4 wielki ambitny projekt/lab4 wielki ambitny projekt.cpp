@@ -45,7 +45,7 @@ int main() {
         choice = convertToInteger(choiceBuf, sizeof(choiceBuf));
 
 
-        if (conversionFailed) { //conversionFailed=wpisano nie-liczb
+        if (conversionFailed) { //conversionFailed=wpisano nie-liczbe
             if (choice == -1) {
                 cout << "Exiting program";
                 waitForEnter();
@@ -202,17 +202,12 @@ int main() {
                 else {
                     menu2();
 
-                    /////////////////////////////////////////////////
-
                     char choice2Buf[100];
                     cin.getline(choice2Buf, 100);
                     choice2 = convertToInteger(choice2Buf, sizeof(choice2Buf));
                     if (conversionFailed) { 
-                        cout << "Invalid input." << endl;
                         waitForEnter();
                     }
-
-                    ////////////////////////////////////////////////
 
 
                     else {
@@ -306,8 +301,9 @@ int main() {
                             removeFromHistory(entityToRemove);
                         }
                         cout << "Would you like to remove another element? (1 - Yes, 0 - No)" << endl;
-                        int yn;
-                        cin >> yn;
+                        char bufyn[100];
+                        cin.getline(bufyn, 100);
+                        int yn = convertToInteger(bufyn, sizeof(bufyn));
                         if (yn != 1) {
                             break; // wychodzi z pętli while(1) i wraca do głównego menu
                         }
@@ -460,9 +456,9 @@ int main() {
                         waitForEnter();
                         break;
                     }
-                    int yn = yn_local;
+                    int ynchoice = yn_local;
 
-                    if (yn == 1) {
+                    if (ynchoice == 1) {
                         howMany = (100 - DataCounter) / 2;
                     }
                     else {
@@ -617,24 +613,51 @@ void menu2() {
 }
 
 double getF() {
-    double F;
     cout << "Enter the temperature in Fahrenheit: ";
-    cin >> F;
-    return F;
+    char fBuf[100];
+    cin.getline(fBuf, 100);
+    conversionFailed = false;
+    int F_local = convertToDouble(fBuf, sizeof(fBuf));
+    if (conversionFailed) {
+        cout << "Try again: " << endl;
+        getF();
+    }
+    else {
+        double F = F_local;
+        return F;
+    }
 }
 
 double getC() {
-    double C;
-    cout << "Enter the temperature in Celsius: ";
-    cin >> C;
-    return C;
+    cout << "Enter the temperature in Celcius: ";
+    char cBuf[100];
+    cin.getline(cBuf, 100);
+    conversionFailed = false;
+    int C_local = convertToDouble(cBuf, sizeof(cBuf));
+    if (conversionFailed) {
+        cout << "Try again: " << endl;
+        getC();
+    }
+    else {
+        double C = C_local;
+        return C;
+    }
 }
 
 double getK() {
-    double K;
     cout << "Enter the temperature in Kelvin: ";
-    cin >> K;
-    return K;
+    char kBuf[100];
+    cin.getline(kBuf, 100);
+    conversionFailed = false;
+    int K_local = convertToDouble(kBuf, sizeof(kBuf));
+    if (conversionFailed) {
+        cout << "Try again: " << endl;
+        getK();
+    }
+    else {
+        double K = K_local;
+        return K;
+    }
 }
 
 double check(double temp, char u) { //u for unit
@@ -705,7 +728,7 @@ int convertToInteger(const char vector[], int size) {
         }
         else {
             if (conversionFailed == false) {
-                cout << "Error. Incorrect input for integer type" << endl;
+                cout << "Error. Incorrect input for type (integer)" << endl;
                 conversionFailed = true;
             }
         }
@@ -748,7 +771,7 @@ double convertToDouble(const char vector[], int size) { //code 06_07
         }
         else {
             if (conversionFailed == false) {
-                cout << "Error. Incorrect input for integer type" << endl;
+                cout << "Error. Incorrect input for type (double)" << endl;
                 conversionFailed = true;
             }
         }
