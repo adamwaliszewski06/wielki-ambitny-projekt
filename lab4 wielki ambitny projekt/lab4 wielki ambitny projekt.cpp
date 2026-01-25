@@ -280,6 +280,7 @@ int main() {
                     if (DataCounter == 0) {
                         cout << "No history available." << endl;
                         waitForEnter();
+                        break;
                     }
                     else {
                         for (int i = 0; i < DataCounter; i += 2) {
@@ -363,7 +364,7 @@ int main() {
                         waitForEnter();
                         break;
                     }
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    //cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     int idx = (entityToModify - 1) * 2;
                     double checked = check(newTemp, newUnit);
                     if (checked == -999.0) {
@@ -374,30 +375,24 @@ int main() {
 
                     memory[idx] = newTemp;
                     memoryUnit[idx] = newUnit;
-
-                    cout << "Pick which unit to convert this temperature to" << endl <<
-                        "1 - Celsius" << endl <<
-                        "2 - Fahrenheit" << endl <<
-                        "3 - Kelvin" << endl;
-
-                    char pickBuf[100];
-                    cin.getline(pickBuf, 100);
-                    conversionFailed = false;
-                    int pick_local = convertToInteger(pickBuf, sizeof(pickBuf));
-                    if (conversionFailed) {
-                        cout << "Invalid input." << endl;
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Enter the unit you want to convert to (C/F/K): ";
+                    char pick;
+                    cin >> pick;
+                    pick = static_cast<char>(std::toupper(static_cast<unsigned char>(pick)));
+                    if (pick != 'C' && pick != 'F' && pick != 'K') {
+                        cout << "Error. Invalid unit symbol." << endl;
                         waitForEnter();
                         break;
                     }
-                    int pick = pick_local;
 
                     if (newUnit == 'C')
                     {
-                        if (pick == 1) {
+                        if (pick == 'C') {
                             memory[idx + 1] = newTemp;
                             memoryUnit[idx + 1] = 'C';
                         }
-                        else if (pick == 2) {
+                        else if (pick == 'F') {
                             memory[idx + 1] = CtoF(newTemp);
                             memoryUnit[idx + 1] = 'F';
                         }
@@ -408,11 +403,11 @@ int main() {
                     }
                     else if (newUnit == 'F')
                     {
-                        if (pick == 1) {
+                        if (pick == 'C') {
                             memory[idx + 1] = FtoC(newTemp);
                             memoryUnit[idx + 1] = 'C';
                         }
-                        else if (pick == 2) {
+                        else if (pick == 'F') {
                             memory[idx + 1] = newTemp;
                             memoryUnit[idx + 1] = 'F';
                         }
@@ -422,11 +417,11 @@ int main() {
                         }
                     }
                     else {
-                        if (pick == 1) {
+                        if (pick == 'C') {
                             memory[idx + 1] = KtoC(newTemp);
                             memoryUnit[idx + 1] = 'C';
                         }
-                        else if (pick == 2) {
+                        else if (pick == 'F') {
                             memory[idx + 1] = KtoF(newTemp);
                             memoryUnit[idx + 1] = 'F';
                         }
@@ -546,6 +541,7 @@ int main() {
                     }
                 }
                 cout << "Generated " << howMany << " random entries";
+                waitForEnter();
                 break;
             default:
                 cout << "Exiting program";
